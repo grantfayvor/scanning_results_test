@@ -4,15 +4,18 @@
  * Module dependencies.
  */
 
-var app = require('../app');
-var debug = require('debug')('api:server');
-var http = require('http');
+require('dotenv').config();
+
+const app = require('../app'),
+  debug = require('debug')('api:server'),
+  http = require('http'),
+  mongoose = require('mongoose');
 
 /**
  * Get port from environment and store in Express.
  */
 
-var port = normalizePort(process.env.PORT || '3000');
+const port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 
 /**
@@ -87,4 +90,9 @@ function onListening() {
     ? 'pipe ' + addr
     : 'port ' + addr.port;
   debug('Listening on ' + bind);
+
+  mongoose.connect(process.env.DB_URI)
+    .then(res => {
+      debug('Successfully connected to database');
+    });
 }
