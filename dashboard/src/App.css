@@ -17,6 +17,15 @@
   color: white;
 }
 
+.small-font {
+  font-size: calc(6px + 2vmin);
+}
+
+.margin-center {
+  width: 100%;
+  margin: auto;
+}
+
 .App-link {
   color: #09d3ac;
 }

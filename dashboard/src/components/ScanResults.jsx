@@ -1,5 +1,5 @@
 import React, { PureComponent } from "react";
-import { Table, Button, ListGroup, Accordion, Card } from "react-bootstrap";
+import { Table, Button, ListGroup, Accordion, Card, Badge } from "react-bootstrap";
 import Modal from "./Modal";
 import Spinner from "./Spinner";
 import '../App.css';
@@ -48,11 +48,11 @@ export default class ScanResults extends PureComponent {
               this.props.scanResults.map((sc, i) => (
                 <tr key={i}>
                   <td>{i + 1}</td>
-                  <td>{sc.repositoryName}</td>
+                  <td>{sc.repositoryName} <Badge variant="light">{sc.findings.length}</Badge></td>
                   <td>{sc.status}</td>
-                  <td>{new Date(sc.queuedAt).toDateString()}</td>
-                  <td>{new Date(sc.scanningAt).toDateString()}</td>
-                  <td>{new Date(sc.finishedAt).toDateString()}</td>
+                  <td className="small-font">{sc.queuedAt}</td>
+                  <td className="small-font">{sc.scanningAt}</td>
+                  <td className="small-font">{sc.finishedAt}</td>
                   <td>
                     <Button variant="outline-info" onClick={() => this.toggleModal(sc)}>
                       View
@@ -95,42 +95,17 @@ export default class ScanResults extends PureComponent {
                         <Accordion defaultActiveKey={0}>
                           <Card>
                             <Card.Header>
-                              <Accordion.Toggle as={Button} variant="link" eventKey={i}>
-                                {`${f.type} - ${f.ruleId}`}
+                              <Accordion.Toggle className="margin-center" as={Button} variant="link" eventKey={i}>
+                                {`${f.ruleId} - ${f.metadata.description}`}
                               </Accordion.Toggle>
                             </Card.Header>
                             <Accordion.Collapse eventKey={i}>
                               <Card.Body>
-                                <Accordion defaultActiveKey={`location-${i}`}>
-                                  <Card>
-                                    <Card.Header>
-                                      <Accordion.Toggle as={Button} variant="link" eventKey={`location-${i}`}>
-                                        Location
-                                      </Accordion.Toggle>
-                                    </Card.Header>
-                                    <Accordion.Collapse eventKey={`location-${i}`}>
-                                      <Card.Body>
-                                        <ListGroup>
-                                          <ListGroup.Item>{JSON.stringify(f.location)}</ListGroup.Item>
-                                        </ListGroup>
-                                      </Card.Body>
-                                    </Accordion.Collapse>
-                                  </Card>
-                                  <Card>
-                                    <Card.Header>
-                                      <Accordion.Toggle as={Button} variant="link" eventKey={`metadata-${i}`}>
-                                        Metadata
-                                      </Accordion.Toggle>
-                                    </Card.Header>
-                                    <Accordion.Collapse eventKey={`metadata-${i}`}>
-                                      <Card.Body>
-                                        <ListGroup>
-                                          <ListGroup.Item>{JSON.stringify(f.metadata)}</ListGroup.Item>
-                                        </ListGroup>
-                                      </Card.Body>
-                                    </Accordion.Collapse>
-                                  </Card>
-                                </Accordion>
+                                <ListGroup>
+                                  <ListGroup.Item>{`Severity - ${f.metadata.severity}`}</ListGroup.Item>
+                                  <ListGroup.Item>{`Path name - "${f.location.path}"`}</ListGroup.Item>
+                                  <ListGroup.Item>{`Line of code - ${(f.location.positions.begin.line)}`}</ListGroup.Item>
+                                </ListGroup>
                               </Card.Body>
                             </Accordion.Collapse>
                           </Card>
