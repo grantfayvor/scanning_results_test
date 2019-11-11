@@ -4,9 +4,6 @@ import axios from "axios";
 import Modal from "./Modal";
 import FindingsForm from "./FindingsForm";
 import '../App.css';
-import Conf from "../config";
-
-const config = Conf[process.env.NODE_ENV];
 
 export default class CreateScanResult extends Component {
 
@@ -76,7 +73,7 @@ export default class CreateScanResult extends Component {
   };
 
   submitScanResult = async () => {
-    await axios.post(`${config.webserver.uri}/api/results`, { result: this.state }).then(res => res.data);
+    await axios.post(`${this.props.config.webserver.uri}/api/results`, { result: this.state }).then(res => res.data);
     window.location.href = "/";
   };
 

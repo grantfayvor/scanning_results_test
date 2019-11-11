@@ -12,8 +12,8 @@ const NavBar = props => {
           <Nav.Link href="/CreateScanResult">Create Scan Result</Nav.Link>
         </Nav>
         <Form inline>
-          <FormControl type="text" placeholder="Search" className="mr-sm-2" />
-          <Button variant="outline-success">Search</Button>
+          <FormControl type="text" placeholder="Search" defaultValue={props.searchText} onChange={e => props.setSearchText(e.target.value)} className="mr-sm-2" />
+          <Button variant="outline-success" onClick={props.search}>Search</Button>
         </Form>
       </Navbar.Collapse>
     </Navbar>
