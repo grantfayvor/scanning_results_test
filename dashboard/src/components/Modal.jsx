@@ -1,9 +1,9 @@
 import React from "react";
 import { Modal, Button } from "react-bootstrap";
 
-export default ({ children, active = true, title, handleSubmit, toggleModal }) => {
+export default ({ children, active = true, title, handleSubmit, toggleModal, size }) => {
   return (
-    <Modal show={active} onHide={() => toggleModal(false)}>
+    <Modal show={active} onHide={() => toggleModal(false)} size={size}>
       <Modal.Header closeButton>
         <Modal.Title>{title}</Modal.Title>
       </Modal.Header>

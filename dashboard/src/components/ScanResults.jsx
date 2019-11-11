@@ -1,31 +1,37 @@
 import React, { PureComponent } from "react";
-import { Table, Button } from "react-bootstrap";
+import { Table, Button, ListGroup, Accordion, Card } from "react-bootstrap";
+import Modal from "./Modal";
+import Spinner from "./Spinner";
 import '../App.css';
-import Axios from "axios";
 
 export default class ScanResults extends PureComponent {
 
   constructor(props) {
     super(props);
     this.state = {
-      scanResults: props.scanResults || []
+      modalActive: false,
+      modalInfo: {}
     };
   }
 
   componentDidMount() {
-    Axios.get(`${this.props.config.webserver.uri}/api/results`)
-      .then(res => res.data && res.data.data)
-      .then(data => data && data.items ? data.items : data)
-      .then(results => {
-        this.setState({ scanResults: results });
-      });
+    this.props.getScans();
   }
+
+  toggleModal = (modalInfo = {}) => {
+    this.setState({
+      modalActive: !this.state.modalActive,
+      modalInfo
+    });
+  };
+
+  showSpinner = () => !!this.props.scanResults.length;
 
   render() {
 
     return (
       <div className="App-header">
-        <Table style={{ color: "white" }} striped bordered>
+        <Table hidden={!this.showSpinner()} style={{ color: "white" }} striped bordered>
           <thead>
             <tr>
               <th>S/N</th>
@@ -39,7 +45,7 @@ export default class ScanResults extends PureComponent {
           </thead>
           <tbody>
             {
-              (this.props.scanResults || this.state.scanResults).map((sc, i) => (
+              this.props.scanResults.map((sc, i) => (
                 <tr key={i}>
                   <td>{i + 1}</td>
                   <td>{sc.repositoryName}</td>
@@ -48,7 +54,7 @@ export default class ScanResults extends PureComponent {
                   <td>{new Date(sc.scanningAt).toDateString()}</td>
                   <td>{new Date(sc.finishedAt).toDateString()}</td>
                   <td>
-                    <Button variant="outline-info">
+                    <Button variant="outline-info" onClick={() => this.toggleModal(sc)}>
                       View
                     </Button>
                   </td>
@@ -57,6 +63,87 @@ export default class ScanResults extends PureComponent {
             }
           </tbody>
         </Table>
+        <Modal title={this.state.modalInfo.repositoryName} toggleModal={this.toggleModal} active={this.state.modalActive} size="lg">
+          <Table striped hover>
+            <tbody>
+              <tr>
+                <td>Repository Name</td>
+                <td>{this.state.modalInfo.repositoryName}</td>
+              </tr>
+              <tr>
+                <td>Status</td>
+                <td>{this.state.modalInfo.status}</td>
+              </tr>
+              <tr>
+                <td>Queued At</td>
+                <td>{this.state.modalInfo.queuedAt}</td>
+              </tr>
+              <tr>
+                <td>Scanning At</td>
+                <td>{this.state.modalInfo.scanningAt}</td>
+              </tr>
+              <tr>
+                <td>Finished At</td>
+                <td>{this.state.modalInfo.finishedAt}</td>
+              </tr>
+              <tr>
+                <td>Findings</td>
+                <td>
+                  {
+                    (this.state.modalInfo.findings || []).map((f, i) => {
+                      return (
+                        <Accordion defaultActiveKey={0}>
+                          <Card>
+                            <Card.Header>
+                              <Accordion.Toggle as={Button} variant="link" eventKey={i}>
+                                {`${f.type} - ${f.ruleId}`}
+                              </Accordion.Toggle>
+                            </Card.Header>
+                            <Accordion.Collapse eventKey={i}>
+                              <Card.Body>
+                                <Accordion defaultActiveKey={`location-${i}`}>
+                                  <Card>
+                                    <Card.Header>
+                                      <Accordion.Toggle as={Button} variant="link" eventKey={`location-${i}`}>
+                                        Location
+                                      </Accordion.Toggle>
+                                    </Card.Header>
+                                    <Accordion.Collapse eventKey={`location-${i}`}>
+                                      <Card.Body>
+                                        <ListGroup>
+                                          <ListGroup.Item>{JSON.stringify(f.location)}</ListGroup.Item>
+                                        </ListGroup>
+                                      </Card.Body>
+                                    </Accordion.Collapse>
+                                  </Card>
+                                  <Card>
+                                    <Card.Header>
+                                      <Accordion.Toggle as={Button} variant="link" eventKey={`metadata-${i}`}>
+                                        Metadata
+                                      </Accordion.Toggle>
+                                    </Card.Header>
+                                    <Accordion.Collapse eventKey={`metadata-${i}`}>
+                                      <Card.Body>
+                                        <ListGroup>
+                                          <ListGroup.Item>{JSON.stringify(f.metadata)}</ListGroup.Item>
+                                        </ListGroup>
+                                      </Card.Body>
+                                    </Accordion.Collapse>
+                                  </Card>
+                                </Accordion>
+                              </Card.Body>
+                            </Accordion.Collapse>
+                          </Card>
+                        </Accordion>
+                      )
+                    })
+                  }
+                </td>
+              </tr>
+            </tbody>
+          </Table>
+        </Modal>
+        <Spinner hidden={this.showSpinner()} />
       </div>
     )
   }

@@ -6,6 +6,7 @@ import {
 } from "react-router-dom";
 import Axios from "axios";
 import NavBar from "./components/NavBar";
+import Spinner from "./components/Spinner";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 import Conf from "./config";
@@ -15,7 +16,7 @@ const ScanResults = React.lazy(() => import('./components/ScanResults'));
 const CreateScanResult = React.lazy(() => import('./components/CreateScanResult'));
 
 function App() {
-  let [scanResults, setScanResults] = useState(),
+  let [scanResults, setScanResults] = useState([]),
     [searchText, setSearchText] = useState("");
 
   const search = () => {
@@ -23,7 +24,15 @@ function App() {
       .then(res => res.data && res.data.data)
       .then(data => data.items)
       .then(results => {
-        console.log(results);
+        setScanResults(results);
+      });
+  };
+
+  const getScans = () => {
+    Axios.get(`${config.webserver.uri}/api/results`)
+      .then(res => res.data && res.data.data)
+      .then(data => data && data.items ? data.items : data)
+      .then(results => {
         setScanResults(results);
       });
   };
@@ -34,13 +43,13 @@ function App() {
         <NavBar search={search} searchText={searchText} setSearchText={setSearchText} />
         <Switch>
           <Route path="/CreateScanResult">
-            <Suspense fallback={<div>Loading...</div>}>
+            <Suspense fallback={<Spinner />}>
               <CreateScanResult config={config} />
             </Suspense>
           </Route>
           <Route path="/">
-            <Suspense fallback={<div>Loading...</div>}>
-              <ScanResults scanResults={scanResults} config={config} />
+            <Suspense fallback={<Spinner />}>
+              <ScanResults scanResults={scanResults} getScans={getScans} config={config} />
             </Suspense>
           </Route>
         </Switch>
