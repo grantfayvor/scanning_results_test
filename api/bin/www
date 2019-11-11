@@ -4,7 +4,11 @@
  * Module dependencies.
  */
 
-require('dotenv').config();
+const path = require('path');
+
+require('dotenv').config({
+  path: path.resolve(process.cwd(), `.env${!/prod/gi.test(process.env.NODE_ENV) ? '.dev' : ''}`)
+});
 
 const app = require('../app'),
   debug = require('debug')('api:server'),
