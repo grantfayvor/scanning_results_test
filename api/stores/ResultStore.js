@@ -11,7 +11,42 @@ const ResultSchema = new Schema({
     type: String,
     required: true
   },
-  findings: [mongoose.SchemaTypes.Mixed],
+  findings: [
+    {
+      type: {
+        type: String,
+        required: true
+      },
+      ruleId: {
+        type: String,
+        required: true
+      },
+      location: {
+        path: {
+          type: String,
+          required: true
+        },
+        positions: {
+          begin: {
+            line: {
+              type: Number,
+              required: true
+            }
+          }
+        }
+      },
+      metadata: {
+        description: {
+          type: String,
+          required: true
+        },
+        severity: {
+          type: String,
+          required: true
+        }
+      }
+    }
+  ],
   queuedAt: {
     type: Date,
     required: true
