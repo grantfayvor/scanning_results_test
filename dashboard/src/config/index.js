@@ -15,7 +15,7 @@ config = new Proxy(config, {
   get(target, prop, receiver) {
     if (prop in target) return target[prop];
 
-    if (new RegExp(prop, "gi").test("prod")) return target["production"];
+    if (/prod/gi.test(prop)) return target["production"];
     else return target["dev"];
   }
 });
