@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Form, Button, ListGroup } from "react-bootstrap";
 import axios from "axios";
 import Modal from "./Modal";
+import Toast from "./Toast";
 import FindingsForm from "./FindingsForm";
 import '../App.css';
 
@@ -23,7 +24,10 @@ export default class CreateScanResult extends Component {
       status: -1,
       queuedAt: now,
       scanningAt: now,
-      finishedAt: now
+      finishedAt: now,
+      showToast: false,
+      toastTitle: "",
+      toastMessage: ""
     };
 
     this.handleModalInputChange = this.handleModalInputChange.bind(this);
@@ -72,9 +76,29 @@ export default class CreateScanResult extends Component {
     });
   };
 
-  submitScanResult = async () => {
-    await axios.post(`${this.props.config.webserver.uri}/api/results`, { result: this.state }).then(res => res.data);
-    window.location.href = "/";
+  toggleToast = () => {
+    this.setState({ showToast: !this.state.showToast });
+  };
+
+  showToast = (title, message) => {
+    this.setState({ toastTitle: title, toastMessage: message, showToast: true });
+  };
+
+  submitScanResult = () => {
+    axios.post(`${this.props.config.webserver.uri}/api/results`, { result: this.state })
+      .then(res => res.data)
+      .then(data => window.location.href = "/")
+      .catch(error => {
+        let title, message = "";
+        if (error.response && error.response.data && error.response.data.err) {
+          title = error.response.data.err.name;
+          message = error.response.data.err.message;
+        } else {
+          title = error.name;
+          message = error.message;
+        }
+        this.showToast(title, message);
+      });
   };
 
   toggleModal(title) {
@@ -87,6 +111,10 @@ export default class CreateScanResult extends Component {
 
     return (
       <div className="App-header">
+        {
+          this.state.showToast && <Toast active={this.state.showToast} title={this.state.toastTitle} message={this.state.toastMessage} toggle={this.toggleToast} />
+        }
+
         <Form style={{ width: "30%" }}>
           <Form.Group controlId="repositoryName">
             <Form.Control value={this.state.repositoryName} onChange={this.handleInputChange("repositoryName")} type="text" placeholder="Enter Repository Name" required />
