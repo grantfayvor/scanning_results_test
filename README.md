@@ -26,4 +26,4 @@ A script is made available to aggregate the commands and you can simply run the 
 
 The project will be available at [localhost:3000](localhost:3000) while the api will be running on [localhost:9000](localhost:9000)
 
-A preview of this project is available at [http://35.235.61.31:3000](http://35.235.61.31:3000) hosted with <3 on the GCP
+A preview of this project is available at [http://35.235.61.31:3000](http://35.235.61.31:3000) hosted with ❤️ on the GCP
