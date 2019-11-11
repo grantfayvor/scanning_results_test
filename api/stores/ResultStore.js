@@ -35,8 +35,12 @@ function ResultStore() {
   };
 
   this.getAll = function () {
-    return model.find();
+    return this.getByParam();
   };
+
+  this.getByParam = function (filter = {}) {
+    return model.find(filter);
+  }
 }
 
 module.exports = new ResultStore();
