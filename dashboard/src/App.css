@@ -17,6 +17,10 @@
   color: white;
 }
 
+.toast-body {
+  background-color: #282c34;
+}
+
 .small-font {
   font-size: calc(6px + 2vmin);
 }
