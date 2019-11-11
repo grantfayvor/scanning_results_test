@@ -1,3 +1,4 @@
+let { protocol, hostname } = window.location;
 let config = {
   dev: {
     webserver: {
@@ -6,7 +7,7 @@ let config = {
   },
   production: {
     webserver: {
-      uri: "http://localhost:9000"
+      uri: `${protocol}//${hostname}:9000`
     }
   }
 };
