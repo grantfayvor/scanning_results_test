@@ -1,0 +1,18 @@
+version: "3"
+services:
+  dashboard:
+    container_name: guardrails_test_dashboard
+    image: guardrails_dashboard:latest
+    restart: always
+    build: .
+    ports: 
+      - "3000:3000"
+    links:
+    - api
+  api:
+    container_name: guardrails_test_api
+    image: guardrails_api:latest
+    restart: always
+    build: .
+    ports: 
+      - "9000:9000"
