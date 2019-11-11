@@ -90,28 +90,29 @@ export default class ScanResults extends PureComponent {
                 <td>Findings</td>
                 <td>
                   {
-                    (this.state.modalInfo.findings || []).map((f, i) => {
-                      return (
-                        <Accordion defaultActiveKey={0}>
-                          <Card>
-                            <Card.Header>
-                              <Accordion.Toggle className="margin-center" as={Button} variant="link" eventKey={i}>
-                                {`${f.ruleId} - ${f.metadata.description}`}
-                              </Accordion.Toggle>
-                            </Card.Header>
-                            <Accordion.Collapse eventKey={i}>
-                              <Card.Body>
-                                <ListGroup>
-                                  <ListGroup.Item>{`Severity - ${f.metadata.severity}`}</ListGroup.Item>
-                                  <ListGroup.Item>{`Path name - "${f.location.path}"`}</ListGroup.Item>
-                                  <ListGroup.Item>{`Line of code - ${(f.location.positions.begin.line)}`}</ListGroup.Item>
-                                </ListGroup>
-                              </Card.Body>
-                            </Accordion.Collapse>
-                          </Card>
-                        </Accordion>
-                      )
-                    })
+                    !(this.state.modalInfo.findings || []).length ? 'N/A' :
+                      this.state.modalInfo.findings.map((f, i) => {
+                        return (
+                          <Accordion defaultActiveKey={0}>
+                            <Card>
+                              <Card.Header>
+                                <Accordion.Toggle className="margin-center" as={Button} variant="link" eventKey={i}>
+                                  {`${f.ruleId} - ${f.metadata.description}`}
+                                </Accordion.Toggle>
+                              </Card.Header>
+                              <Accordion.Collapse eventKey={i}>
+                                <Card.Body>
+                                  <ListGroup>
+                                    <ListGroup.Item>{`Severity - ${f.metadata.severity}`}</ListGroup.Item>
+                                    <ListGroup.Item>{`Path name - "${f.location.path}"`}</ListGroup.Item>
+                                    <ListGroup.Item>{`Line of code - ${(f.location.positions.begin.line)}`}</ListGroup.Item>
+                                  </ListGroup>
+                                </Card.Body>
+                              </Accordion.Collapse>
+                            </Card>
+                          </Accordion>
+                        )
+                      })
                   }
                 </td>
               </tr>
