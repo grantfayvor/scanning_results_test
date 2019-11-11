@@ -1,7 +1,7 @@
 # Scanning Results
 
 ## INSTALLATION & SETUP
-* [Local](#local-setup)
+* [Local](#local-setup) (Requires local MongoDB server)
 * [Docker](#docker-setup)
 
 ### Local Setup
@@ -12,6 +12,7 @@ The application can be setup locally by following the steps below -
 * Run ``` npm start``` in the terminal
 * Open the project in a new terminal and change directory into the dashboard project ```cd dashboard```
 * Run ```npm install``` in the terminal
+* Ensure that you have a local mongodb server running. If not run the command ```export NODE_ENV=production```, this would allow connection to an online mongodb server.
 * Run ```npm start``` in the terminal
 
 ### Docker Setup
