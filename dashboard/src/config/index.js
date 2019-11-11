@@ -1,12 +1,12 @@
 let config = {
   dev: {
     webserver: {
-      uri: "http://localhost:3000"
+      uri: "http://localhost:9000"
     }
   },
   production: {
     webserver: {
-      uri: ""
+      uri: "http://localhost:9000"
     }
   }
 };
