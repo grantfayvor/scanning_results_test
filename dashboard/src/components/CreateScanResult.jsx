@@ -12,7 +12,7 @@ export default class CreateScanResult extends Component {
     super(props);
     let now = new Date();
     this.state = {
-      modalFinding: {
+      finding: {
         type: "",
         ruleId: "",
         location: "",
@@ -46,10 +46,10 @@ export default class CreateScanResult extends Component {
 
   handleModalChanges(prop) {
     return value => {
-      let modalFinding = Object.assign({}, this.state.modalFinding, {
+      let finding = Object.assign({}, this.state.finding, {
         [prop]: value
       });
-      this.setState({ modalFinding });
+      this.setState({ finding });
     };
   };
 
@@ -60,12 +60,12 @@ export default class CreateScanResult extends Component {
   };
 
   addFindingsData() {
-    let modalFinding = Object.assign({}, this.state.modalFinding);
-    if (typeof modalFinding.location === "string") modalFinding.location = JSON.parse(modalFinding.location);
-    if (typeof modalFinding.metadata === "string") modalFinding.metadata = JSON.parse(modalFinding.metadata);
+    let finding = Object.assign({}, this.state.finding);
+    if (typeof finding.location === "string") finding.location = JSON.parse(finding.location);
+    if (typeof finding.metadata === "string") finding.metadata = JSON.parse(finding.metadata);
     this.setState({
-      findings: this.state.findings.concat(modalFinding),
-      modalFinding: {
+      findings: this.state.findings.concat(finding),
+      finding: {
         type: "",
         ruleId: "",
         location: "",
@@ -156,7 +156,7 @@ export default class CreateScanResult extends Component {
         </Form>
         <Modal toggleModal={this.toggleModal("findingsModal")} active={this.state["findingsModal"]} title={"Enter Findings"} handleSubmit={this.addFindingsData}>
           <FindingsForm
-            modalFinding={this.state.modalFinding}
+            finding={this.state.finding}
             handleModalChanges={this.handleModalChanges}
             handleModalInputChange={this.handleModalInputChange}
           />
